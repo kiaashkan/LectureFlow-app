@@ -2,9 +2,8 @@
 
 🌐 **Documentation**
 
-* 🇺🇸 English: README.md
-* 🇮🇷 فارسی: https://github.com/kiaashkan/LectureFlow-app/blob/main/README-FA.md
-
+* 🇺🇸 [English](README.md)
+* 🇮🇷 [فارسی](README-FA.md)
 ---
 
 Official Android application for LectureFlow.
