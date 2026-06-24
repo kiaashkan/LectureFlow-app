@@ -101,14 +101,6 @@ https://github.com/kiaashkan/LectureFlow
 TJiV8kgAVxHqXka743abkn2jk7mhDWqmCa
 ```
 
----
-
-## License
-
-MIT License
-
----
-
 ## Author
 
 KiA Ashkan
