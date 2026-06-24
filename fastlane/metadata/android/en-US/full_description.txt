@@ -1,0 +1,10 @@
+LectureFlow is an Android app for the LectureFlow web service — an AI-powered lecture transcription tool designed for pharmacy and science students.
+
+Features:
+- Upload audio recordings of lectures
+- Get full transcript powered by Whisper AI
+- Extract formulas, technical terms, and key points
+- Download results as TXT
+- Automatic dark/light mode based on system setting
+
+This app is a WebView wrapper for https://lf.kiaashkan.workers.dev
