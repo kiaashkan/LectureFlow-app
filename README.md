@@ -37,12 +37,6 @@ https://github.com/kiaashkan/LectureFlow
 
 ---
 
-## Screenshots
-
-Add screenshots of the application here.
-
----
-
 ## Development
 
 LectureFlow Android was developed using Android Studio and Java, with assistance from Claude AI during development.
