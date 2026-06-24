@@ -1,5 +1,12 @@
 # LectureFlow Android 📱
 
+🌐 **Documentation**
+
+* 🇺🇸 English: README.md
+* 🇮🇷 فارسی: https://github.com/kiaashkan/LectureFlow-app/blob/main/README-FA.md
+
+---
+
 Official Android application for LectureFlow.
 
 Access AI-powered lecture analysis directly from your Android device.
