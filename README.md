@@ -7,7 +7,7 @@ the live website full-screen, so **every site update is instantly the app
 update**. One codebase, one deploy.
 
 - Package: `ir.kiaashkan.lectureflow`
-- Version: 1.0.2 (versionCode 3)
+- Version: 1.0.3 (versionCode 4)
 - Min Android: 5.0 (API 21)
 - Generated with [Bubblewrap](https://github.com/GoogleChromeLabs/bubblewrap)
   from the site's web app manifest; configuration lives in `twa-manifest.json`.

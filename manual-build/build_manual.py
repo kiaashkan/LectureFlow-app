@@ -156,6 +156,29 @@ for (_, dest, _, _) in aars:
                                 target.append(sub); have_md.add(mn)
                         else:
                             target.append(sub)
+# androidx.startup ordering hazard (the v1.0.0–v1.0.2 startup crash):
+# AppInitializer discovers initializers by iterating the provider's
+# meta-data and initializes each on the spot. EmojiCompatInitializer
+# depends on ProcessLifecycleInitializer, but discovery reaches Emoji
+# first, so ProcessLifecycle gets created as a mere dependency before
+# its own discovery — and its create() refuses lazy initialization
+# (IllegalStateException: "ProcessLifecycleInitializer cannot be
+# initialized lazily"). The TWA shell renders no native text, so
+# EmojiCompat auto-init is dead weight here: drop its meta-data (the
+# manual-build equivalent of tools:node="remove") and put
+# ProcessLifecycleInitializer first among what remains.
+for comp in app_el:
+    if comp.get(ANDROID + 'name') == 'androidx.startup.InitializationProvider':
+        for md in list(comp.findall('meta-data')):
+            if md.get(ANDROID + 'name') == 'androidx.emoji2.text.EmojiCompatInitializer':
+                comp.remove(md)
+        mds = comp.findall('meta-data')
+        mds.sort(key=lambda m: 0 if m.get(ANDROID + 'name') ==
+                 'androidx.lifecycle.ProcessLifecycleInitializer' else 1)
+        for md in mds:
+            comp.remove(md)
+        for md in mds:
+            comp.append(md)
 merged = os.path.join(WORK, 'AndroidManifest.xml')
 tree.write(merged, encoding='utf-8', xml_declaration=True)
 print('manifest merged; components:', len(existing))
@@ -177,7 +200,7 @@ base_apk = os.path.join(WORK, 'base.apk')
 cmd = [os.path.join(BT, 'aapt2'), 'link', '-o', base_apk, '-I', AJAR,
        '--manifest', merged, '--java', gen_dir, '--output-text-symbols', symbols,
        '--auto-add-overlay', '--min-sdk-version', '21', '--target-sdk-version', '36',
-       '--version-code', '3', '--version-name', '1.0.2']
+       '--version-code', '4', '--version-name', '1.0.3']
 for fl in flats:
     cmd += ['-R', fl]
 run(cmd)
@@ -318,7 +341,7 @@ run([os.path.join(BT, 'zipalign'), '-f', '-p', '4', unsigned, aligned])
 pw = open(PWFILE).read().strip()
 signpass = os.path.join(WORK, 'signpass.txt')
 open(signpass, 'w').write(pw + '\n' + pw + '\n')
-final = os.path.join(ROOT, 'LectureFlow-v1.0.2.apk')
+final = os.path.join(ROOT, 'LectureFlow-v1.0.3.apk')
 run([os.path.join(BT, 'apksigner'), 'sign', '--ks', KS,
      '--ks-pass', f'file:{signpass}', '--key-pass', f'file:{signpass}',
      '--ks-key-alias', 'lectureflow', '--out', final, aligned])
