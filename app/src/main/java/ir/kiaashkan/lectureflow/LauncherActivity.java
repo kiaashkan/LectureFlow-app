@@ -15,39 +15,62 @@
  */
 package ir.kiaashkan.lectureflow;
 
+import android.content.ActivityNotFoundException;
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.widget.Toast;
 
-
+import androidx.browser.customtabs.CustomTabsIntent;
 
 public class LauncherActivity
         extends com.google.androidbrowserhelper.trusted.LauncherActivity {
-    
 
-    
+    private static final String LAUNCH_URL = "https://lf.kiaashkan.workers.dev/";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        // Setting an orientation crashes the app due to the transparent background on Android 8.0
-        // Oreo and below. We only set the orientation on Oreo and above. This only affects the
-        // splash screen and Chrome will still respect the orientation.
-        // See https://github.com/GoogleChromeLabs/bubblewrap/issues/496 for details.
-        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.O) {
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_USER_PORTRAIT);
-        } else {
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
+        try {
+            super.onCreate(savedInstanceState);
+            // Setting an orientation crashes the app due to the transparent background on Android 8.0
+            // Oreo and below. We only set the orientation on Oreo and above. This only affects the
+            // splash screen and Chrome will still respect the orientation.
+            // See https://github.com/GoogleChromeLabs/bubblewrap/issues/496 for details.
+            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.O) {
+                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_USER_PORTRAIT);
+            } else {
+                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
+            }
+        } catch (Throwable t) {
+            // Never die silently: if the trusted launch path fails on this
+            // device/browser combination, still land the user on LectureFlow
+            // via a Custom Tab, then a plain browser intent.
+            openFallback();
+            finish();
         }
+    }
+
+    private void openFallback() {
+        Uri url = Uri.parse(LAUNCH_URL);
+        try {
+            new CustomTabsIntent.Builder().build().launchUrl(this, url);
+            return;
+        } catch (Throwable ignored) {
+        }
+        try {
+            startActivity(new Intent(Intent.ACTION_VIEW, url));
+            return;
+        } catch (ActivityNotFoundException ignored) {
+        }
+        Toast.makeText(this, "No browser available", Toast.LENGTH_LONG).show();
     }
 
     @Override
     protected Uri getLaunchingUrl() {
         // Get the original launch Url.
         Uri uri = super.getLaunchingUrl();
-
-        
 
         return uri;
     }

@@ -159,7 +159,7 @@ base_apk = os.path.join(WORK, 'base.apk')
 cmd = [os.path.join(BT, 'aapt2'), 'link', '-o', base_apk, '-I', AJAR,
        '--manifest', merged, '--java', gen_dir, '--output-text-symbols', symbols,
        '--auto-add-overlay', '--min-sdk-version', '21', '--target-sdk-version', '36',
-       '--version-code', '1', '--version-name', '1.0.0']
+       '--version-code', '2', '--version-name', '1.0.1']
 for fl in flats:
     cmd += ['-R', fl]
 run(cmd)
@@ -300,7 +300,7 @@ run([os.path.join(BT, 'zipalign'), '-f', '-p', '4', unsigned, aligned])
 pw = open(PWFILE).read().strip()
 signpass = os.path.join(WORK, 'signpass.txt')
 open(signpass, 'w').write(pw + '\n' + pw + '\n')
-final = os.path.join(ROOT, 'LectureFlow-v1.0.0.apk')
+final = os.path.join(ROOT, 'LectureFlow-v1.0.1.apk')
 run([os.path.join(BT, 'apksigner'), 'sign', '--ks', KS,
      '--ks-pass', f'file:{signpass}', '--key-pass', f'file:{signpass}',
      '--ks-key-alias', 'lectureflow', '--out', final, aligned])
