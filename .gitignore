@@ -1,0 +1,18 @@
+# Signing material — never commit a keystore
+*.keystore
+*.jks
+
+# Machine-local config
+local.properties
+
+# Build outputs
+build/
+app/build/
+.gradle/
+*.apk
+*.aab
+
+# Manual-build working files (dependency cache is re-downloadable)
+manual-build/work/
+manual-build/deps/
+__pycache__/

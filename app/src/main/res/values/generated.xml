@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="appName">LectureFlow</string>
+    <string name="launcherName">LectureFlow</string>
+    <string name="launchUrl">https://lf.kiaashkan.workers.dev/</string>
+    <string name="webManifestUrl">https://lf.kiaashkan.workers.dev/manifest.webmanifest</string>
+    <string name="fullScopeUrl">https://lf.kiaashkan.workers.dev/</string>
+    <string name="hostName">lf.kiaashkan.workers.dev</string>
+    <color name="colorPrimary">#6366F1</color>
+    <color name="colorPrimaryDark">#000000</color>
+    <color name="navigationColor">#F4F5FB</color>
+    <color name="navigationColorDark">#000000</color>
+    <color name="navigationDividerColor">#000000</color>
+    <color name="navigationDividerColorDark">#000000</color>
+    <color name="backgroundColor">#F4F5FB</color>
+    <string name="providerAuthority">ir.kiaashkan.lectureflow.fileprovider</string>
+    <bool name="enableNotification">true</bool>
+    <integer name="splashScreenFadeOutDuration">300</integer>
+    <string name="generatorApp">bubblewrap-cli</string>
+    <string name="fallbackType">customtabs</string>
+    <bool name="enableSiteSettingsShortcut">true</bool>
+    <string name="orientation">portrait</string>
+</resources>
