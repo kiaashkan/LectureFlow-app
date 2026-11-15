@@ -95,7 +95,7 @@ for d, s in [('drawable-mdpi', 24), ('drawable-hdpi', 36), ('drawable-xhdpi', 48
               (0, 0), alpha.resize((s, s), Image.LANCZOS))
     sil.save(os.path.join(RES, d, 'ic_notification_icon.png'))
 os.makedirs(os.path.join(RES, 'raw'), exist_ok=True)
-shutil.copy('/tmp/webmanifest.json', os.path.join(RES, 'raw', 'web_app_manifest.json'))
+shutil.copy(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'webmanifest.json'), os.path.join(RES, 'raw', 'web_app_manifest.json'))
 print('generated resources written')
 
 # ---------- 1. extract AARs ----------
@@ -119,7 +119,7 @@ app_man_path = os.path.join(ROOT, 'app/src/main/AndroidManifest.xml')
 tree = ET.parse(app_man_path)
 root = tree.getroot()
 app_el = root.find('application')
-have_components = {c.get(ANDROID + 'name') for c in app_el}
+existing = {c.get(ANDROID + 'name'): c for c in app_el if c.get(ANDROID + 'name')}
 have_perms = {c.get(ANDROID + 'name') for c in root.findall('uses-permission')}
 for (_, dest, _, _) in aars:
     lm = ET.parse(os.path.join(dest, 'AndroidManifest.xml')).getroot()
@@ -136,11 +136,29 @@ for (_, dest, _, _) in aars:
         elif child.tag == 'application':
             for comp in child:
                 n = comp.get(ANDROID + 'name')
-                if n and n not in have_components:
-                    app_el.append(comp); have_components.add(n)
+                if not n:
+                    continue
+                if n not in existing:
+                    app_el.append(comp); existing[n] = comp
+                else:
+                    # Same component declared by several libraries (e.g.
+                    # androidx.startup.InitializationProvider): AGP unions
+                    # their children. Merge meta-data by name, append the
+                    # rest — dropping them loses required initializers and
+                    # crashes the app at startup (v1.0.0/v1.0.1 bug).
+                    target = existing[n]
+                    have_md = {m.get(ANDROID + 'name')
+                               for m in target.findall('meta-data')}
+                    for sub in comp:
+                        if sub.tag == 'meta-data':
+                            mn = sub.get(ANDROID + 'name')
+                            if mn not in have_md:
+                                target.append(sub); have_md.add(mn)
+                        else:
+                            target.append(sub)
 merged = os.path.join(WORK, 'AndroidManifest.xml')
 tree.write(merged, encoding='utf-8', xml_declaration=True)
-print('manifest merged; components:', len(have_components))
+print('manifest merged; components:', len(existing))
 
 # ---------- 3. aapt2 compile + link ----------
 flats = []
@@ -159,7 +177,7 @@ base_apk = os.path.join(WORK, 'base.apk')
 cmd = [os.path.join(BT, 'aapt2'), 'link', '-o', base_apk, '-I', AJAR,
        '--manifest', merged, '--java', gen_dir, '--output-text-symbols', symbols,
        '--auto-add-overlay', '--min-sdk-version', '21', '--target-sdk-version', '36',
-       '--version-code', '2', '--version-name', '1.0.1']
+       '--version-code', '3', '--version-name', '1.0.2']
 for fl in flats:
     cmd += ['-R', fl]
 run(cmd)
@@ -300,7 +318,7 @@ run([os.path.join(BT, 'zipalign'), '-f', '-p', '4', unsigned, aligned])
 pw = open(PWFILE).read().strip()
 signpass = os.path.join(WORK, 'signpass.txt')
 open(signpass, 'w').write(pw + '\n' + pw + '\n')
-final = os.path.join(ROOT, 'LectureFlow-v1.0.1.apk')
+final = os.path.join(ROOT, 'LectureFlow-v1.0.2.apk')
 run([os.path.join(BT, 'apksigner'), 'sign', '--ks', KS,
      '--ks-pass', f'file:{signpass}', '--key-pass', f'file:{signpass}',
      '--ks-key-alias', 'lectureflow', '--out', final, aligned])
