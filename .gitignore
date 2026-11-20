@@ -12,6 +12,15 @@ app/build/
 *.apk
 *.aab
 
+# Generated launcher/splash/notification images — recreated by
+# manual-build/build_manual.py from the icon sources in icons/
+app/src/main/res/mipmap-*/ic_launcher.png
+app/src/main/res/mipmap-*/ic_maskable.png
+app/src/main/res/drawable-*/splash.png
+app/src/main/res/drawable-night-*/splash.png
+app/src/main/res/drawable-*/ic_notification_icon.png
+store_icon.png
+
 # Manual-build working files (dependency cache is re-downloadable)
 manual-build/work/
 manual-build/deps/

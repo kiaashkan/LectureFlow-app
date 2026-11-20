@@ -26,13 +26,13 @@ def twaManifest = [
     launchUrl: '/', // The start path for the TWA. Must be relative to the domain.
     name: 'LectureFlow', // The application name.
     launcherName: 'LectureFlow', // The name shown on the Android Launcher.
-    themeColor: '#6366F1', // The color used for the status bar.
-    themeColorDark: '#000000', // The color used for the dark status bar.
-    navigationColor: '#F4F5FB', // The color used for the navigation bar.
-    navigationColorDark: '#000000', // The color used for the dark navbar.
+    themeColor: '#FAF8F4', // The color used for the status bar.
+    themeColorDark: '#100E0C', // The color used for the dark status bar.
+    navigationColor: '#FAF8F4', // The color used for the navigation bar.
+    navigationColorDark: '#100E0C', // The color used for the dark navbar.
     navigationDividerColor: '#000000', // The navbar divider color.
     navigationDividerColorDark: '#000000', // The dark navbar divider color.
-    backgroundColor: '#F4F5FB', // The color used for the splash screen background.
+    backgroundColor: '#FAF8F4', // The color used for the splash screen background.
     enableNotifications: true, // Set to true to enable notification delegation.
     // Every shortcut must include the following fields:
     // - name: String that will show up in the shortcut.
@@ -57,8 +57,8 @@ android {
         applicationId "ir.kiaashkan.lectureflow"
         minSdkVersion 21
         targetSdkVersion 36
-        versionCode 4
-        versionName "1.0.3"
+        versionCode 7
+        versionName "1.0.6"
 
         // The name for the application
         resValue "string", "appName", twaManifest.name

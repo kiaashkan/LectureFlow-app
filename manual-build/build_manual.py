@@ -58,13 +58,13 @@ with open(os.path.join(RES, 'values', 'generated.xml'), 'w') as fh:
     <string name="webManifestUrl">https://lf.kiaashkan.workers.dev/manifest.webmanifest</string>
     <string name="fullScopeUrl">https://lf.kiaashkan.workers.dev/</string>
     <string name="hostName">lf.kiaashkan.workers.dev</string>
-    <color name="colorPrimary">#6366F1</color>
-    <color name="colorPrimaryDark">#000000</color>
-    <color name="navigationColor">#F4F5FB</color>
-    <color name="navigationColorDark">#000000</color>
+    <color name="colorPrimary">#FAF8F4</color>
+    <color name="colorPrimaryDark">#100E0C</color>
+    <color name="navigationColor">#FAF8F4</color>
+    <color name="navigationColorDark">#100E0C</color>
     <color name="navigationDividerColor">#000000</color>
     <color name="navigationDividerColorDark">#000000</color>
-    <color name="backgroundColor">#F4F5FB</color>
+    <color name="backgroundColor">#FAF8F4</color>
     <string name="providerAuthority">ir.kiaashkan.lectureflow.fileprovider</string>
     <bool name="enableNotification">true</bool>
     <integer name="splashScreenFadeOutDuration">300</integer>
@@ -74,19 +74,37 @@ with open(os.path.join(RES, 'values', 'generated.xml'), 'w') as fh:
     <string name="orientation">portrait</string>
 </resources>
 ''')
-ICONS = os.path.expanduser('~/workspace/lectureflow/pwa-icons')
+os.makedirs(os.path.join(RES, 'values-night'), exist_ok=True)
+with open(os.path.join(RES, 'values-night', 'generated.xml'), 'w') as fh:
+    fh.write('''<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="backgroundColor">#100E0C</color>
+</resources>
+''')
+ICONS = os.path.join(ROOT, 'icons')
 icon_any = Image.open(os.path.join(ICONS, 'icon-512.png')).convert('RGBA')
 icon_mask = Image.open(os.path.join(ICONS, 'icon-maskable-512.png')).convert('RGBA')
-BG = (0xF4, 0xF5, 0xFB, 255)
+icon_dark = Image.open(os.path.join(ICONS, 'icon-dark-512.png')).convert('RGBA')
+BG = (0xFA, 0xF8, 0xF4, 255)
 for d, s in [('drawable-mdpi', 300), ('drawable-hdpi', 450), ('drawable-xhdpi', 600),
              ('drawable-xxhdpi', 900), ('drawable-xxxhdpi', 1200)]:
     os.makedirs(os.path.join(RES, d), exist_ok=True)
     canvas = Image.new('RGBA', (s, s), BG)
     canvas.alpha_composite(icon_any.resize((s, s), Image.LANCZOS))
     canvas.save(os.path.join(RES, d, 'splash.png'))
+BGD = (0x10, 0x0E, 0x0C, 255)
+for d, s in [('drawable-night-mdpi', 300), ('drawable-night-hdpi', 450), ('drawable-night-xhdpi', 600),
+             ('drawable-night-xxhdpi', 900), ('drawable-night-xxxhdpi', 1200)]:
+    os.makedirs(os.path.join(RES, d), exist_ok=True)
+    canvas = Image.new('RGBA', (s, s), BGD)
+    canvas.alpha_composite(icon_dark.resize((s, s), Image.LANCZOS))
+    canvas.save(os.path.join(RES, d, 'splash.png'))
 for d, s in [('mipmap-mdpi', 82), ('mipmap-hdpi', 123), ('mipmap-xhdpi', 164),
              ('mipmap-xxhdpi', 246), ('mipmap-xxxhdpi', 328)]:
     icon_mask.resize((s, s), Image.LANCZOS).save(os.path.join(RES, d, 'ic_maskable.png'))
+for d, s in [('mipmap-mdpi', 48), ('mipmap-hdpi', 72), ('mipmap-xhdpi', 96),
+             ('mipmap-xxhdpi', 144), ('mipmap-xxxhdpi', 192)]:
+    icon_any.resize((s, s), Image.LANCZOS).save(os.path.join(RES, d, 'ic_launcher.png'))
 alpha = icon_any.split()[3]
 for d, s in [('drawable-mdpi', 24), ('drawable-hdpi', 36), ('drawable-xhdpi', 48),
              ('drawable-xxhdpi', 72), ('drawable-xxxhdpi', 96)]:
@@ -200,7 +218,7 @@ base_apk = os.path.join(WORK, 'base.apk')
 cmd = [os.path.join(BT, 'aapt2'), 'link', '-o', base_apk, '-I', AJAR,
        '--manifest', merged, '--java', gen_dir, '--output-text-symbols', symbols,
        '--auto-add-overlay', '--min-sdk-version', '21', '--target-sdk-version', '36',
-       '--version-code', '4', '--version-name', '1.0.3']
+       '--version-code', '7', '--version-name', '1.0.6']
 for fl in flats:
     cmd += ['-R', fl]
 run(cmd)
@@ -341,7 +359,7 @@ run([os.path.join(BT, 'zipalign'), '-f', '-p', '4', unsigned, aligned])
 pw = open(PWFILE).read().strip()
 signpass = os.path.join(WORK, 'signpass.txt')
 open(signpass, 'w').write(pw + '\n' + pw + '\n')
-final = os.path.join(ROOT, 'LectureFlow-v1.0.3.apk')
+final = os.path.join(ROOT, 'LectureFlow-v1.0.6.apk')
 run([os.path.join(BT, 'apksigner'), 'sign', '--ks', KS,
      '--ks-pass', f'file:{signpass}', '--key-pass', f'file:{signpass}',
      '--ks-key-alias', 'lectureflow', '--out', final, aligned])
