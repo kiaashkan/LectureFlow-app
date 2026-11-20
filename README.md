@@ -1,5 +1,7 @@
 # LectureFlow — Android App (TWA)
 
+English | [فارسی](README-FA.md)
+
 The Android app for [LectureFlow](https://lf.kiaashkan.workers.dev/), built as a
 **Trusted Web Activity (TWA)**: a thin, official Google shell around the
 LectureFlow web app (PWA). The app contains no duplicated site logic — it opens
@@ -11,6 +13,9 @@ update**. One codebase, one deploy.
 - Min Android: 5.0 (API 21)
 - Generated with [Bubblewrap](https://github.com/GoogleChromeLabs/bubblewrap)
   from the site's web app manifest; configuration lives in `twa-manifest.json`.
+- Download: the signed APK is attached to each
+  [GitHub Release](https://github.com/kiaashkan/LectureFlow-app/releases)
+  (latest: v1.0.6). The launch splash follows the system light/dark mode.
 
 ## Full-screen requirement (Digital Asset Links)
 
